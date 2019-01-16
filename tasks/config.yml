@@ -1,0 +1,25 @@
+---
+
+- name: Create metrics config
+  copy:
+    src: metrics.yaml
+    dest: "{{ kafka_dir }}/metrics/metrics.yaml"
+    owner: kafka
+    group: kafka
+    mode: 0644
+  notify: restart kafka
+
+- name: Create log4j config
+  copy:
+    src: log4j.properties
+    dest: "{{ kafka_dir }}/log4j.properties"
+    owner: kafka
+    group: kafka
+    mode: 0644
+  notify: restart kafka
+
+- name: Copy Kafka config
+  template:
+    src: kafka-properties.j2
+    dest: "{{ kafka_dir }}/kafka-server.properties"
+  notify: restart kafka

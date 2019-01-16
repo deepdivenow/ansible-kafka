@@ -1,0 +1,51 @@
+---
+- name: Add Confluent Dist REPO
+  yum_repository:
+    name: confluent-dist
+    description: Confluent repository (dist)
+    baseurl: "http://packages.confluent.io/rpm/{{ kafka_confluent_release }}/7"
+    gpgkey: "http://packages.confluent.io/rpm/{{ kafka_confluent_release }}/archive.key"
+    gpgcheck: yes
+
+- name: Add Confluent Main REPO
+  yum_repository:
+    name: confluent-main
+    description: Confluent repository (main)
+    baseurl: "http://packages.confluent.io/rpm/{{ kafka_confluent_release }}"
+    gpgkey: "http://packages.confluent.io/rpm/{{ kafka_confluent_release }}/archive.key"
+    gpgcheck: yes
+
+- name: Install Kafka package
+  yum:
+    name: "confluent-kafka-{{ kafka_version }}"
+    state: present
+
+- name: create group kafka
+  group: name=kafka state=present
+
+- name: create user kafka
+  user: name=kafka group=kafka state=present
+
+- name: Ensures that kafka dirs exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: kafka
+    group: kafka
+  notify: restart kafka
+  with_items:
+  - "/etc/kafka"
+  - "/var/log/kafka"
+  - "{{ kafka_data_dir }}"
+  - "{{ kafka_dir }}/metrics"
+
+- name: Download prometheus jmx_exporter
+  get_url:
+    url: "{{ jmx_exporter_url }}"
+    owner: kafka
+    group: kafka
+    dest: "{{ kafka_dir }}/metrics/jmx_prometheus_javaagent.jar"
+    force: yes
+    mode: 0644
+  tags:
+    - kafka

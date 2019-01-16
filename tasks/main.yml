@@ -1,0 +1,12 @@
+---
+# tasks file for confluent-kafka
+
+- import_tasks: install.yml
+  tags: [kafka,kafka-install]
+- import_tasks: config.yml
+  tags: [kafka,kafka-config]
+- import_tasks: service.yml
+  tags: [kafka,kafka-service]
+
+
+

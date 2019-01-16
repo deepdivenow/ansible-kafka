@@ -1,0 +1,22 @@
+---
+# defaults file for confluent-kafka
+kafka_data_dir: /var/lib/kafka
+kafka_dir: "/etc/kafka"
+kafka_port: 9092
+kafka_allow_topic_deletion: false
+kafka_default_replication_factor: 1
+kafka_default_num_partitions: 1
+
+kafka_confluent_release: '4.1'
+kafka_version: '2.11'
+
+kafka_metrics_port: 9101
+jmx_exporter_url: 'https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.9/jmx_prometheus_javaagent-0.9.jar'
+
+kafka_hosts:
+  - host: "kafka-1"
+    id: 1
+  - host: "kafka-2"
+    id: 2
+  - host: "kafka-3"
+    id: 3
