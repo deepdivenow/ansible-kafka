@@ -4,7 +4,9 @@ Before=
 After=network.target
 
 [Service]
-Environment='KAFKA_JMX_OPTS=-javaagent:{{ kafka_dir }}/metrics/jmx_prometheus_javaagent.jar={{ kafka_metrics_port }}:{{ kafka_dir }}/metrics/metrics.yaml'
+{% if kafka_exporter_enable %}
+Environment='KAFKA_JMX_OPTS=-javaagent:{{ jmx_exporter_dir }}/jmx_prometheus_javaagent.jar={{ kafka_exporter_port }}:{{ jmx_exporter_dir }}/kafka_metrics.yml'
+{% endif %}
 User=kafka
 ExecStart=/usr/bin/kafka-server-start {{ kafka_dir }}/kafka-server.properties
 Restart=on-abort

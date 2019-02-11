@@ -3,6 +3,15 @@
 
 - import_tasks: install.yml
   tags: [kafka,kafka-install]
+
+- include_role:
+    name: jmx-exporter
+  vars:
+    jmx_exporter_service: 'kafka'
+    jmx_exporter_port: "{{ kafka_exporter_port }}"
+  when: kafka_exporter_enable
+  tags: [kafka,kafka-install]
+
 - import_tasks: config.yml
   tags: [kafka,kafka-config]
 - import_tasks: service.yml

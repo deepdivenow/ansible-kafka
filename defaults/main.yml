@@ -1,5 +1,7 @@
 ---
 # defaults file for confluent-kafka
+kafka_exporter_enable: False
+kafka_exporter_port: 9308
 kafka_data_dir: /var/lib/kafka
 kafka_dir: "/etc/kafka"
 kafka_port: 9092
