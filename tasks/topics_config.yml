@@ -1,0 +1,25 @@
+---
+
+- name: Install python-pip
+  yum: name=python2-pip
+
+- name: Install python modules
+  pip: name="{{ kafka_lib_reqs }}"
+
+- set_fact:
+    zookeeper_hosts_list: "{{zookeeper_hosts  | map(attribute='host') | map('regex_replace', '(.*)', '\\1:{{zookeeper_port}}') | list | join (',') }}"
+    kafka_hosts_list: "{{ kafka_hosts  | map(attribute='host') | map('regex_replace', '(.*)', '\\1:{{kafka_port}}') | list | join (',') }}"
+
+- name: Create topics
+  kafka_lib:
+    resource: "topic"
+    api_version: "1.0.1"
+    name: "{{ item.name }}"
+    partitions: "{{ item.partitions | default(omit) }}"
+    replica_factor: "{{ item.replica_factor | default(omit) }}"
+    options: "{{ item.options | default(omit) }}"
+    state: "present"
+    zookeeper: "{{ zookeeper_hosts_list }}"
+    bootstrap_servers: "{{ kafka_hosts_list }}"
+  with_items: "{{ kafka_topics }}"
+  run_once: True

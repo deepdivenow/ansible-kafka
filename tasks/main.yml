@@ -1,7 +1,12 @@
 ---
 # tasks file for confluent-kafka
 
-- import_tasks: install.yml
+- import_tasks: install_RedHat.yml
+  when: ansible_os_family == "RedHat"
+  tags: [kafka,kafka-install]
+
+- import_tasks: install_Debian.yml
+  when: ansible_os_family == "Debian"
   tags: [kafka,kafka-install]
 
 - include_role:
@@ -14,8 +19,10 @@
 
 - import_tasks: config.yml
   tags: [kafka,kafka-config]
+
 - import_tasks: service.yml
   tags: [kafka,kafka-service]
 
-
-
+- import_tasks: topics_config.yml
+  when: kafka_topics | length > 0
+  tags: [kafka,kafka-config]

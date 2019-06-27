@@ -11,9 +11,21 @@ kafka_default_num_partitions: 1
 
 kafka_confluent_release: '4.1'
 kafka_version: '2.11'
+kafka_lib_reqs:
+- "kafka-python==1.4.4"
+- "kazoo==2.6.1"
+- "pure-sasl==0.5.1"
 
 kafka_metrics_port: 9101
 jmx_exporter_url: 'https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.9/jmx_prometheus_javaagent-0.9.jar'
+zookeeper_port: 2181
+zookeeper_hosts:
+  - host: "kafka-1"
+    id: 1
+  - host: "kafka-2"
+    id: 2
+  - host: "kafka-3"
+    id: 3
 
 kafka_hosts:
   - host: "kafka-1"
@@ -22,3 +34,6 @@ kafka_hosts:
     id: 2
   - host: "kafka-3"
     id: 3
+
+kafka_topics: []
+# - {name: topic1, replica_factor: 2, partitions: 3, options: {retention.ms: 574930, flush.ms: 12345} }

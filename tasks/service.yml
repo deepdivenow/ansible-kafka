@@ -9,4 +9,4 @@
 - meta: flush_handlers
 
 - name: start kafka
-  service: name=kafka state=started enabled=yes
+  service: name=kafka state=started enabled=True

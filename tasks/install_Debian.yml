@@ -1,0 +1,34 @@
+---
+
+- name: Add an Apt signing key, uses whichever key is at the URL
+  apt_key:
+    url: https://packages.confluent.io/deb/{{ kafka_confluent_release }}/archive.key
+    state: present
+
+- name: Add Confluent Dist REPO | Ubuntu
+  apt_repository:
+    repo: deb [arch=amd64] https://packages.confluent.io/deb/{{ kafka_confluent_release }} stable main
+    state: present
+
+- name: Install Kafka package
+  apt:
+    name: "confluent-kafka-{{ kafka_version }}"
+    state: present
+
+- name: create group kafka
+  group: name=kafka state=present
+
+- name: create user kafka
+  user: name=kafka group=kafka state=present
+
+- name: Ensures that kafka dirs exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: kafka
+    group: kafka
+  notify: restart kafka
+  with_items:
+  - "/etc/kafka"
+  - "/var/log/kafka"
+  - "{{ kafka_data_dir }}"
